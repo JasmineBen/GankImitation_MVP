@@ -1,8 +1,10 @@
 package com.conan.gankimitation.view.adapter;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,19 +13,24 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.conan.gankimitation.view.activities.BaseActivity;
 import com.conan.gankimitation.R;
+import com.conan.gankimitation.bean.FlutterWebEvent;
 import com.conan.gankimitation.bean.GankEntity;
 import com.conan.gankimitation.bean.GankList;
 import com.conan.gankimitation.di.qualifier.ImageFetcher;
 import com.conan.gankimitation.imageloader.IFetcher;
 import com.conan.gankimitation.utils.AppUtil;
 import com.conan.gankimitation.utils.LogUtil;
+import com.conan.gankimitation.view.activities.BaseActivity;
+import com.conan.gankimitation.view.activities.FlutterWebActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.flutter.app.FlutterActivity;
 
 /**
  * Description：Gank列表Adapter
@@ -81,10 +88,13 @@ public class GankListAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 if(!TextUtils.isEmpty(entity.getUrl())){
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_VIEW);
-                    Uri uri = Uri.parse(entity.getUrl());
-                    intent.setData(uri);
+//                    Intent intent = new Intent();
+//                    intent.setAction(Intent.ACTION_VIEW);
+//                    Uri uri = Uri.parse(entity.getUrl());
+//                    intent.setData(uri);
+//                    mActivity.startActivity(intent);
+                    Intent intent = new Intent(mActivity, FlutterWebActivity.class);
+                    intent.putExtra("url",entity.getUrl());
                     mActivity.startActivity(intent);
                 }
             }

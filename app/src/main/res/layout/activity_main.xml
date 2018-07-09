@@ -42,9 +42,10 @@
         android:layout_gravity="left"
         android:background="@color/c_ebebeb"
         android:fitsSystemWindows="true"
+        app:headerLayout="@layout/navigation_header"
         app:itemTextColor="@color/c_de000000"
-        app:menu="@menu/navigation"
-        app:headerLayout="@layout/navigation_header"/>
+        app:menu="@menu/navigation" />
 </android.support.v4.widget.DrawerLayout>
+
 
 

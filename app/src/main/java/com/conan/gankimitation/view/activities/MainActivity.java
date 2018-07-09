@@ -11,9 +11,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.conan.gankimitation.R;
 import com.conan.gankimitation.bean.MainTab;
 import com.conan.gankimitation.di.qualifier.ImageFetcher;
@@ -113,11 +113,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
     }
-
 
 }

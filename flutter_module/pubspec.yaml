@@ -1,0 +1,18 @@
+name: flutter_module
+description: A new flutter module project.
+version: 1.0.0+1
+
+dependencies:
+  package_info:
+  flutter:
+    sdk: flutter
+  flutter_webview_plugin: "^0.1.6"
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  module:
+    androidPackage: com.example.fluttermodule
