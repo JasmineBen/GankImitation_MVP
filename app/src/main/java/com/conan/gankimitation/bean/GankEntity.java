@@ -1,7 +1,13 @@
 package com.conan.gankimitation.bean;
 
+import android.util.Log;
+
+import com.conan.gankimitation.BR;
 import com.conan.gankimitation.BuildConfig;
+import com.conan.gankimitation.R;
 import com.conan.gankimitation.data.database.StringToListConvert;
+import com.conan.gankimitation.data.network.GankApi;
+import com.conan.gankimitation.view.adapter.MultiTypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import org.greenrobot.greendao.annotation.Convert;
@@ -19,7 +25,7 @@ import org.greenrobot.greendao.annotation.Generated;
  * Time：2017/10/28
  */
 @Entity
-public class GankEntity {
+public class GankEntity implements MultiTypeAdapter.IItem{
 
     @Id
     @SerializedName("_id")
@@ -198,4 +204,36 @@ public class GankEntity {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public int getLayout() {
+        if(GankApi.GankDataType.DATA_TYPE_WELFARE.getDataType().equals(type)){
+            return R.layout.item_welfare;
+        }
+        return R.layout.gank_item_layout;
+    }
+
+    @Override
+    public int getVariableId() {
+        if(GankApi.GankDataType.DATA_TYPE_WELFARE.getDataType().equals(type)){
+            return BR.welfare;
+        }
+        return BR.item;
+    }
+
+    public String getCover(){
+        if(images != null && images.size() > 0){
+            return images.get(0);
+        }
+        return null;
+    }
+
+    public void showDetail(){
+        if(GankApi.GankDataType.DATA_TYPE_WELFARE.getDataType().equals(type)){
+
+        }else{
+
+        }
+    }
+
 }

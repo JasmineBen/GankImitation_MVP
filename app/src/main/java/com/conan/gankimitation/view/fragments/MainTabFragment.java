@@ -1,27 +1,31 @@
 package com.conan.gankimitation.view.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.conan.gankimitation.R;
+import com.conan.gankimitation.bean.GankEntity;
 import com.conan.gankimitation.bean.GankList;
 import com.conan.gankimitation.contract.MainTabContract;
 import com.conan.gankimitation.data.network.GankApi;
+import com.conan.gankimitation.databinding.GankListLayoutBinding;
 import com.conan.gankimitation.presenter.MainTabPresenter;
 import com.conan.gankimitation.utils.AppUtil;
 import com.conan.gankimitation.utils.Constants;
 import com.conan.gankimitation.utils.LogUtil;
-import com.conan.gankimitation.view.adapter.GankListAdapter;
+import com.conan.gankimitation.view.adapter.MultiTypeAdapter;
 import com.conan.gankimitation.widget.GankRecyclerView;
 
 import javax.inject.Inject;
-
-import butterknife.BindView;
 
 /**
  * Description：TabFragment
@@ -35,17 +39,16 @@ public class MainTabFragment extends BaseFragment implements MainTabContract.IMa
 
     private GankApi.GankDataType mDataType;
 
-    @BindView(R.id.swipe_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-    @BindView(R.id.recyclerview)
     GankRecyclerView mRecyclerView;
 
     @Inject
     MainTabPresenter mPresenter;
-
     @Inject
-    GankListAdapter mAdapter;
+    MultiTypeAdapter mAdapter;
+
+    private GankListLayoutBinding mBinding;
 
     public static MainTabFragment newInstance(GankApi.GankDataType dataType) {
         MainTabFragment fragment = new MainTabFragment();
@@ -65,6 +68,14 @@ public class MainTabFragment extends BaseFragment implements MainTabContract.IMa
         }
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mBinding = GankListLayoutBinding.inflate(inflater,container,false);
+        initViews();
+        return mBinding.getRoot();
+    }
+
     @Override
     public void onRefresh() {
         mPresenter.fetchGankList(mDataType, AppUtil.getPageIndex(mAdapter.getItemCount(),
@@ -79,18 +90,13 @@ public class MainTabFragment extends BaseFragment implements MainTabContract.IMa
         }
     }
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.gank_list_layout;
-    }
 
     @Override
     protected void injectDagger() {
         getFragmentComponent().inject(this);
     }
 
-    @Override
-    protected void initViews(View fragmentView) {
+    private void initViews() {
         mPresenter.attachView(this);
         initSwipeView();
         intRecyclerView();
@@ -98,6 +104,7 @@ public class MainTabFragment extends BaseFragment implements MainTabContract.IMa
     }
 
     private void intRecyclerView() {
+        mRecyclerView = mBinding.recyclerview;
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -105,9 +112,23 @@ public class MainTabFragment extends BaseFragment implements MainTabContract.IMa
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setOnLoadMoreListener(this);
+        mAdapter.setItemmClickListener(new MultiTypeAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(MultiTypeAdapter.IItem item) {
+                GankEntity entity = (GankEntity)item;
+                if(!TextUtils.isEmpty(entity.getUrl())){
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    Uri uri = Uri.parse(entity.getUrl());
+                    intent.setData(uri);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     private void initSwipeView() {
+        mSwipeRefreshLayout = mBinding.swipeLayout;
         mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary, R.color.colorPrimaryDark);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -126,7 +147,8 @@ public class MainTabFragment extends BaseFragment implements MainTabContract.IMa
 
     @Override
     public void fetchGankListSuccess(GankList gankList, boolean hasMoreData) {
-        mAdapter.setData(gankList);
+        mAdapter.addItems(gankList.getGankDatas());
+        mAdapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
         mRecyclerView.setLoadMoreComplete();
     }

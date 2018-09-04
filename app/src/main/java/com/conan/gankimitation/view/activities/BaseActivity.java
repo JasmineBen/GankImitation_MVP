@@ -1,15 +1,12 @@
 package com.conan.gankimitation.view.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.conan.gankimitation.GankApplication;
 import com.conan.gankimitation.R;
@@ -20,8 +17,6 @@ import com.conan.gankimitation.di.module.ActivityModule;
 import com.conan.gankimitation.utils.LogUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -36,30 +31,17 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private static final String TAG = BaseActivity.class.getSimpleName();
 
-    @BindView(R.id.toolbar)
-    @Nullable
-    Toolbar mToolbar;
 
     private ActivityComponent mActivityComponent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutId());
-        ButterKnife.bind(this);
-        initToolbar();
         this.getAppComponent().inject(this);
         mActivityComponent = DaggerActivityComponent.builder().
                 applicationComponent(getAppComponent()).
                 activityModule(new ActivityModule(this)).build();
         requestNecessaryPermission();
-    }
-
-    private void initToolbar() {
-        if (mToolbar != null) {
-            mToolbar.setTitle(R.string.app_name);
-            setSupportActionBar(mToolbar);
-        }
     }
 
     @Override
@@ -112,13 +94,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(observer);
     }
 
-    protected abstract int getLayoutId();
-
     protected abstract void onNecessaryPermissionGranted();
-
-    protected Toolbar getToolbar() {
-        return mToolbar;
-    }
 
     protected ActivityComponent getActivityComponent() {
         return mActivityComponent;

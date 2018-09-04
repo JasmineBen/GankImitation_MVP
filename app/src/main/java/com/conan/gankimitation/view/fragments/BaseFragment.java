@@ -13,8 +13,6 @@ import com.conan.gankimitation.di.component.DaggerFragmentComponent;
 import com.conan.gankimitation.di.component.FragmentComponent;
 import com.conan.gankimitation.di.module.FragmentModule;
 
-import butterknife.ButterKnife;
-
 /**
  * Description：基类Fragment
  * Created by：JasmineBen
@@ -23,13 +21,9 @@ import butterknife.ButterKnife;
 
 public abstract class BaseFragment<T extends IContract.IPresenter> extends Fragment {
 
-    private View mFragmentView;
 
     private FragmentComponent mFragmentComponent;
 
-    protected abstract int getLayoutId();
-
-    protected abstract void initViews(View fragmentView);
 
     protected abstract void injectDagger();
 
@@ -43,16 +37,6 @@ public abstract class BaseFragment<T extends IContract.IPresenter> extends Fragm
         injectDagger();
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (mFragmentView == null) {
-            mFragmentView = inflater.inflate(getLayoutId(), container, false);
-            ButterKnife.bind(this, mFragmentView);
-            initViews(mFragmentView);
-        }
-        return mFragmentView;
-    }
 
     protected FragmentComponent getFragmentComponent(){
         return mFragmentComponent;

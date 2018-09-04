@@ -1,6 +1,7 @@
 package com.conan.gankimitation.view.activities;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -9,13 +10,14 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.conan.gankimitation.R;
 import com.conan.gankimitation.bean.MainTab;
+import com.conan.gankimitation.databinding.ActivityMainBinding;
 import com.conan.gankimitation.di.qualifier.ImageFetcher;
 import com.conan.gankimitation.imageloader.DisplayOptionsCreator;
 import com.conan.gankimitation.imageloader.IFetcher;
@@ -28,8 +30,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-
 /**
  * Description：主Activity
  * Created by：JasmineBen
@@ -38,17 +38,14 @@ import butterknife.BindView;
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    @BindView(R.id.navigation_view)
     NavigationView mNavigationView;
-    @BindView(R.id.drawer_left)
     DrawerLayout mDrawerLayout;
-    @BindView(R.id.viewpager)
     ViewPager mViewPager;
-    @BindView(R.id.tabs)
     TabLayout mTabLayout;
     @Inject
     @ImageFetcher("ImageLoader")
     IFetcher mImageLoader;
+    ActivityMainBinding mBinding;
 
 
     @Override
@@ -63,19 +60,29 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     protected void initViews() {
+        mBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
+        initToolbar();
         initNavigationView();
         initDrawerLayout();
         initViewPager();
         initTabLayout();
     }
 
+    private void initToolbar() {
+        Toolbar toolbar = mBinding.mainToolbar.toolbar;
+        toolbar.setTitle(R.string.app_name);
+        setSupportActionBar(toolbar);
+    }
+
     private void initDrawerLayout(){
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, getToolbar(), R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout = mBinding.drawerLeft;
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mBinding.mainToolbar.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
 
     private void initViewPager() {
+        mViewPager = mBinding.viewpager;
         String[] tabs = getResources().getStringArray(R.array.study_tab);
         List<MainTab> mainTabs = new ArrayList<>(tabs.length);
         for (int i = 0; i < tabs.length; i++) {
@@ -87,11 +94,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void initTabLayout() {
+        mTabLayout = mBinding.tabs;
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
     }
 
     private void initNavigationView(){
+        mNavigationView = mBinding.navigationView;
         mNavigationView.setNavigationItemSelectedListener(this);
         View headView = mNavigationView.getHeaderView(0);
         ImageView headImage = (ImageView) headView.findViewById(R.id.header);
@@ -113,11 +122,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_main;
-    }
 
 
 }
