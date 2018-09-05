@@ -7,12 +7,13 @@
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
+
         <import type="android.view.View.OnClickListener" />
 
         <variable
-            name="item"
-            type="com.conan.gankimitation.bean.GankEntity"/>
+            name="viewmodel"
+            type="com.conan.gankimitation.viewmodel.GankItemViewModel" />
 
     </data>
 
@@ -43,8 +44,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:scaleType="centerCrop"
-                android:visibility="@{item.getCover() == null ? View.GONE : View.VISIBLE}"
-                app:imageUrl="@{item.getCover()}"/>
+                android:visibility="@{viewmodel.getCover == null ? View.GONE : View.VISIBLE}"
+                app:imageUrl="@{viewmodel.getCover()}" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -61,9 +62,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="3"
+                    android:text="@{viewmodel.getDesc()}"
                     android:textColor="@color/c_de000000"
-                    android:textSize="@dimen/medium_text_size"
-                    android:text="@{item.desc}"/>
+                    android:textSize="@dimen/medium_text_size" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -77,10 +78,10 @@
                         android:layout_alignParentLeft="true"
                         android:ellipsize="end"
                         android:singleLine="true"
+                        android:text="@{viewmodel.getPublisher()}"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="@color/c_8a000000"
-                        android:textSize="@dimen/small_text_size"
-                        android:text="@{item.publisher}"/>
+                        android:textSize="@dimen/small_text_size" />
 
                     <TextView
                         android:id="@+id/publish_time_tv"
@@ -88,9 +89,9 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:singleLine="true"
+                        android:text="@{viewmodel.getPublishTime()}"
                         android:textColor="@color/c_8a000000"
-                        android:textSize="@dimen/small_text_size"
-                        android:text="@{item.publishedTime}"/>
+                        android:textSize="@dimen/small_text_size" />
                 </RelativeLayout>
 
             </LinearLayout>

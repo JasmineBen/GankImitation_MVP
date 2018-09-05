@@ -57,6 +57,13 @@ public class GankList extends GankException {
         }
     }
 
+    public GankEntity getItem(int position){
+        if(gankDatas == null || position >= gankDatas.size()){
+            return null;
+        }
+        return gankDatas.get(position);
+    }
+
     @Override
     public String toString() {
         if(BuildConfig.DEBUG) {

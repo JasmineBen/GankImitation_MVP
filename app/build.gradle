@@ -72,4 +72,8 @@ dependencies {
     //rxpermissions2
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
 
+    // ViewModel和LiveData依赖
+    compile 'android.arch.lifecycle:extensions:1.0.0-rc1'
+    annotationProcessor 'android.arch.lifecycle:compiler:1.0.0-rc1'
+
 }

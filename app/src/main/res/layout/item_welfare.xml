@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="welfare"
-            type="com.conan.gankimitation.bean.GankEntity" />
+            name="viewmodel"
+            type="com.conan.gankimitation.viewmodel.WelfareViewModel" />
     </data>
 
     <FrameLayout
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            app:welfareImageUrl="@{welfare.url}"/>
+            app:welfareImageUrl="@{viewmodel.getCover()}"/>
 
     </FrameLayout>
 </layout>

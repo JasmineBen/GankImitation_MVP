@@ -22,7 +22,10 @@ import com.conan.gankimitation.presenter.MainTabPresenter;
 import com.conan.gankimitation.utils.AppUtil;
 import com.conan.gankimitation.utils.Constants;
 import com.conan.gankimitation.utils.LogUtil;
-import com.conan.gankimitation.view.adapter.MultiTypeAdapter;
+import com.conan.gankimitation.view.activities.MainActivity;
+import com.conan.gankimitation.view.adapter.GankListAdapter;
+import com.conan.gankimitation.view.listener.OnItemClickListener;
+import com.conan.gankimitation.viewmodel.GankListViewModel;
 import com.conan.gankimitation.widget.GankRecyclerView;
 
 import javax.inject.Inject;
@@ -46,9 +49,10 @@ public class MainTabFragment extends BaseFragment implements MainTabContract.IMa
     @Inject
     MainTabPresenter mPresenter;
     @Inject
-    MultiTypeAdapter mAdapter;
+    GankListAdapter mAdapter;
 
     private GankListLayoutBinding mBinding;
+    private GankListViewModel mViewModel;
 
     public static MainTabFragment newInstance(GankApi.GankDataType dataType) {
         MainTabFragment fragment = new MainTabFragment();
@@ -72,6 +76,7 @@ public class MainTabFragment extends BaseFragment implements MainTabContract.IMa
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = GankListLayoutBinding.inflate(inflater,container,false);
+        mBinding.setViewmodel(((MainActivity)getActivity()).obtainViewModel());
         initViews();
         return mBinding.getRoot();
     }
@@ -112,14 +117,13 @@ public class MainTabFragment extends BaseFragment implements MainTabContract.IMa
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setOnLoadMoreListener(this);
-        mAdapter.setItemmClickListener(new MultiTypeAdapter.ItemClickListener() {
+        mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(MultiTypeAdapter.IItem item) {
-                GankEntity entity = (GankEntity)item;
-                if(!TextUtils.isEmpty(entity.getUrl())){
+            public void onItemClick(GankEntity gank) {
+                if(!TextUtils.isEmpty(gank.getUrl())){
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_VIEW);
-                    Uri uri = Uri.parse(entity.getUrl());
+                    Uri uri = Uri.parse(gank.getUrl());
                     intent.setData(uri);
                     startActivity(intent);
                 }
@@ -147,8 +151,7 @@ public class MainTabFragment extends BaseFragment implements MainTabContract.IMa
 
     @Override
     public void fetchGankListSuccess(GankList gankList, boolean hasMoreData) {
-        mAdapter.addItems(gankList.getGankDatas());
-        mAdapter.notifyDataSetChanged();
+        mAdapter.setData(gankList);
         mSwipeRefreshLayout.setRefreshing(false);
         mRecyclerView.setLoadMoreComplete();
     }

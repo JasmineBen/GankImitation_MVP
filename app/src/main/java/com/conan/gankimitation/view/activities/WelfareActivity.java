@@ -17,7 +17,7 @@ import com.conan.gankimitation.presenter.WelfarePresenter;
 import com.conan.gankimitation.utils.AppUtil;
 import com.conan.gankimitation.utils.Constants;
 import com.conan.gankimitation.utils.LogUtil;
-import com.conan.gankimitation.view.adapter.MultiTypeAdapter;
+import com.conan.gankimitation.view.adapter.WelfareAdapter;
 import com.conan.gankimitation.widget.GankRecyclerView;
 import com.conan.gankimitation.widget.WelfareItemDecoration;
 
@@ -35,7 +35,7 @@ public class WelfareActivity extends BaseActivity implements WelfareContract.IWe
     @Inject
     WelfarePresenter mPresenter;
     @Inject
-    MultiTypeAdapter mAdapter;
+    WelfareAdapter mAdapter;
     SwipeRefreshLayout mSwipeRefreshLayout;
     GankRecyclerView mRecyclerView;
     WelfareLayoutBinding mBinding;
@@ -120,8 +120,7 @@ public class WelfareActivity extends BaseActivity implements WelfareContract.IWe
     @Override
     public void fetchWelfareListSuccess(GankList gankList, boolean hasMoreData) {
         LogUtil.i(TAG,"fetchWelfareListSuccess");
-        mAdapter.addItems(gankList.getGankDatas());
-        mAdapter.notifyDataSetChanged();
+        mAdapter.setData(gankList);
         mSwipeRefreshLayout.setRefreshing(false);
         mRecyclerView.setLoadMoreComplete();
     }

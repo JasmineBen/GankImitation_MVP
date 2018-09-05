@@ -1,11 +1,13 @@
 package com.conan.gankimitation.view.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +19,7 @@ import android.widget.ImageView;
 
 import com.conan.gankimitation.R;
 import com.conan.gankimitation.bean.MainTab;
+import com.conan.gankimitation.data.repository.IRepository;
 import com.conan.gankimitation.databinding.ActivityMainBinding;
 import com.conan.gankimitation.di.qualifier.ImageFetcher;
 import com.conan.gankimitation.imageloader.DisplayOptionsCreator;
@@ -24,6 +27,8 @@ import com.conan.gankimitation.imageloader.IFetcher;
 import com.conan.gankimitation.utils.AppUtil;
 import com.conan.gankimitation.utils.LogUtil;
 import com.conan.gankimitation.view.adapter.MainTabPagerAdapter;
+import com.conan.gankimitation.viewmodel.GankListViewModel;
+import com.conan.gankimitation.viewmodel.ViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +52,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     IFetcher mImageLoader;
     ActivityMainBinding mBinding;
 
+    @Inject
+    IRepository mRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +127,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
         }
         return true;
+    }
+
+    public GankListViewModel obtainViewModel(){
+        ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
+        GankListViewModel viewModel =  ViewModelProviders.of(this,factory).get(GankListViewModel.class);
+        viewModel.setRepository(mRepository);
+        return viewModel;
     }
 
 
