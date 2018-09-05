@@ -32,9 +32,22 @@ public class WelfareAdapter extends RecyclerView.Adapter<WelfareAdapter.BindingH
         this.mActivity = activity;
     }
 
-    public void setData(GankList data) {
-        this.mWelfareData = data;
-        notifyDataSetChanged();
+    public void setData(GankList data, boolean refresh) {
+        int position = 0;
+        if(mWelfareData == null) {
+            this.mWelfareData = data;
+        }else{
+            if(refresh){
+                mWelfareData.clear();
+            }
+            position = mWelfareData.size();
+            mWelfareData.addItems(data.getGankDatas());
+        }
+        if(refresh){
+            notifyDataSetChanged();
+        }else {
+            notifyItemInserted(position);
+        }
     }
 
     @Override
@@ -67,7 +80,7 @@ public class WelfareAdapter extends RecyclerView.Adapter<WelfareAdapter.BindingH
         private ItemWelfareBinding binding;
 
         public BindingHolder(ItemWelfareBinding binding) {
-            super(binding.getRoot());
+            super(binding.containerItem);
             this.binding = binding;
         }
     }

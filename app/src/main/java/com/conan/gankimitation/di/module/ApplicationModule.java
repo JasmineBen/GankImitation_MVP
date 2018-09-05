@@ -5,10 +5,6 @@ import android.content.Context;
 import com.conan.gankimitation.GankApplication;
 import com.conan.gankimitation.data.database.GankOpenDbHelper;
 import com.conan.gankimitation.data.database.dao.DaoMaster;
-import com.conan.gankimitation.di.qualifier.ImageFetcher;
-import com.conan.gankimitation.imageloader.GlideImageFetcher;
-import com.conan.gankimitation.imageloader.IFetcher;
-import com.conan.gankimitation.imageloader.ImageLoader;
 import com.conan.gankimitation.data.repository.GankRepository;
 import com.conan.gankimitation.data.repository.IRepository;
 
@@ -49,17 +45,5 @@ public class ApplicationModule {
         return repository;
     }
 
-    @Provides
-    @ImageFetcher("ImageLoader")
-    @Singleton
-    IFetcher provideImageLoader(ImageLoader imageLoader){
-        return imageLoader;
-    }
-    @Provides
-    @ImageFetcher("Glide")
-    @Singleton
-    IFetcher provideFetcher(){
-        return new GlideImageFetcher();
-    }
 
 }

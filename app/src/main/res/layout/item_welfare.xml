@@ -14,9 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
-        android:foreground="?android:attr/selectableItemBackground">
+        android:foreground="?android:attr/selectableItemBackground"
+        android:id="@+id/container_item">
 
-        <ImageView
+        <com.conan.gankimitation.widget.WelfareImage
             android:id="@+id/photo_iv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

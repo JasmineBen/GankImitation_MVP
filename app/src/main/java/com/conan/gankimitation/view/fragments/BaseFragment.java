@@ -3,12 +3,8 @@ package com.conan.gankimitation.view.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.conan.gankimitation.GankApplication;
-import com.conan.gankimitation.contract.IContract;
 import com.conan.gankimitation.di.component.DaggerFragmentComponent;
 import com.conan.gankimitation.di.component.FragmentComponent;
 import com.conan.gankimitation.di.module.FragmentModule;
@@ -19,7 +15,7 @@ import com.conan.gankimitation.di.module.FragmentModule;
  * Time：2017/10/31
  */
 
-public abstract class BaseFragment<T extends IContract.IPresenter> extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
 
     private FragmentComponent mFragmentComponent;

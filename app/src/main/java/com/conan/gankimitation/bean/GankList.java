@@ -75,4 +75,10 @@ public class GankList extends GankException {
             return super.toString();
         }
     }
+
+    public void addItems(List<GankEntity> list){
+        if(list != null){
+            gankDatas.addAll(list);
+        }
+    }
 }

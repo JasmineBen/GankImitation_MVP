@@ -1,13 +1,12 @@
 package com.conan.gankimitation.view.activities;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -17,18 +16,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.conan.gankimitation.R;
 import com.conan.gankimitation.bean.MainTab;
 import com.conan.gankimitation.data.repository.IRepository;
 import com.conan.gankimitation.databinding.ActivityMainBinding;
-import com.conan.gankimitation.di.qualifier.ImageFetcher;
-import com.conan.gankimitation.imageloader.DisplayOptionsCreator;
-import com.conan.gankimitation.imageloader.IFetcher;
 import com.conan.gankimitation.utils.AppUtil;
 import com.conan.gankimitation.utils.LogUtil;
 import com.conan.gankimitation.view.adapter.MainTabPagerAdapter;
-import com.conan.gankimitation.viewmodel.GankListViewModel;
-import com.conan.gankimitation.viewmodel.ViewModelFactory;
+import com.conan.gankimitation.widget.CircleDrawable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +44,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     DrawerLayout mDrawerLayout;
     ViewPager mViewPager;
     TabLayout mTabLayout;
-    @Inject
-    @ImageFetcher("ImageLoader")
-    IFetcher mImageLoader;
     ActivityMainBinding mBinding;
 
     @Inject
@@ -96,6 +90,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             MainTab tab = new MainTab(tabs[i], i, AppUtil.parseGankDataType(tabs[i]));
             mainTabs.add(tab);
         }
+        mViewPager.setOffscreenPageLimit(mainTabs.size());
         MainTabPagerAdapter adapter = new MainTabPagerAdapter(this, mainTabs);
         mViewPager.setAdapter(adapter);
     }
@@ -111,8 +106,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mNavigationView.setNavigationItemSelectedListener(this);
         View headView = mNavigationView.getHeaderView(0);
         ImageView headImage = (ImageView) headView.findViewById(R.id.header);
-        mImageLoader.displayImage(this,headImage,
-                R.mipmap.navigation_header, DisplayOptionsCreator.getAvatarOptions(),null);
+        Glide.with(this).load(R.mipmap.navigation_header).asBitmap().into(new BitmapImageViewTarget(headImage) {
+            @Override
+            protected void setResource(Bitmap resource) {
+                    getView().setImageDrawable(new CircleDrawable(resource));
+
+            }
+        });
     }
 
     @Override
@@ -129,13 +129,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
-    public GankListViewModel obtainViewModel(){
-        ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
-        GankListViewModel viewModel =  ViewModelProviders.of(this,factory).get(GankListViewModel.class);
-        viewModel.setRepository(mRepository);
-        return viewModel;
+    public IRepository getRepository() {
+        return mRepository;
     }
-
-
-
 }

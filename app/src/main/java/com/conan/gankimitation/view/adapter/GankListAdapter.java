@@ -31,9 +31,22 @@ public class GankListAdapter extends RecyclerView.Adapter<GankListAdapter.Bindin
         this.mItemClickListener = itemClickListener;
     }
 
-    public void setData(GankList data){
-        mData = data;
-        notifyDataSetChanged();
+    public void setData(GankList data,boolean refresh){
+        int position = 0;
+        if(mData == null) {
+            this.mData = data;
+        }else{
+            if(refresh){
+                mData.clear();
+            }
+            position = mData.size();
+            mData.addItems(data.getGankDatas());
+        }
+        if(refresh){
+            notifyDataSetChanged();
+        }else {
+            notifyItemInserted(position);
+        }
     }
 
     @Override

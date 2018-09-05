@@ -2,12 +2,10 @@ package com.conan.gankimitation.di.component;
 
 import android.content.Context;
 
-import com.conan.gankimitation.view.activities.BaseActivity;
 import com.conan.gankimitation.data.database.dao.DaoMaster;
-import com.conan.gankimitation.di.module.ApplicationModule;
-import com.conan.gankimitation.di.qualifier.ImageFetcher;
-import com.conan.gankimitation.imageloader.IFetcher;
 import com.conan.gankimitation.data.repository.IRepository;
+import com.conan.gankimitation.di.module.ApplicationModule;
+import com.conan.gankimitation.view.activities.BaseActivity;
 
 import javax.inject.Singleton;
 
@@ -28,5 +26,4 @@ public interface ApplicationComponent {
     Context applicationContext();
     DaoMaster.OpenHelper openDbHelper();
     IRepository gankRepository();
-    @ImageFetcher("ImageLoader") IFetcher imageLoader();
 }

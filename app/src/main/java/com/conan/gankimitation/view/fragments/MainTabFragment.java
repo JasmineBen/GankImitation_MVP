@@ -1,5 +1,6 @@
 package com.conan.gankimitation.view.fragments;
 
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,10 +16,8 @@ import android.view.ViewGroup;
 import com.conan.gankimitation.R;
 import com.conan.gankimitation.bean.GankEntity;
 import com.conan.gankimitation.bean.GankList;
-import com.conan.gankimitation.contract.MainTabContract;
 import com.conan.gankimitation.data.network.GankApi;
 import com.conan.gankimitation.databinding.GankListLayoutBinding;
-import com.conan.gankimitation.presenter.MainTabPresenter;
 import com.conan.gankimitation.utils.AppUtil;
 import com.conan.gankimitation.utils.Constants;
 import com.conan.gankimitation.utils.LogUtil;
@@ -26,6 +25,7 @@ import com.conan.gankimitation.view.activities.MainActivity;
 import com.conan.gankimitation.view.adapter.GankListAdapter;
 import com.conan.gankimitation.view.listener.OnItemClickListener;
 import com.conan.gankimitation.viewmodel.GankListViewModel;
+import com.conan.gankimitation.viewmodel.ViewModelFactory;
 import com.conan.gankimitation.widget.GankRecyclerView;
 
 import javax.inject.Inject;
@@ -36,7 +36,7 @@ import javax.inject.Inject;
  * Time：2017/10/31
  */
 
-public class MainTabFragment extends BaseFragment implements MainTabContract.IMainTabView, SwipeRefreshLayout.OnRefreshListener,GankRecyclerView.OnLoadMoreListener {
+public class MainTabFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,GankRecyclerView.OnLoadMoreListener {
 
     private static final String TAG = MainTabFragment.class.getSimpleName();
 
@@ -46,8 +46,6 @@ public class MainTabFragment extends BaseFragment implements MainTabContract.IMa
 
     GankRecyclerView mRecyclerView;
 
-    @Inject
-    MainTabPresenter mPresenter;
     @Inject
     GankListAdapter mAdapter;
 
@@ -76,21 +74,34 @@ public class MainTabFragment extends BaseFragment implements MainTabContract.IMa
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBinding = GankListLayoutBinding.inflate(inflater,container,false);
-        mBinding.setViewmodel(((MainActivity)getActivity()).obtainViewModel());
+        mViewModel = obtainViewModel();
+        mViewModel.getLoadMoreTaskEvent().observe(this, new Observer<GankList>() {
+            @Override
+            public void onChanged(@Nullable GankList gankList) {
+                fetchGankListSuccess(gankList,false);
+            }
+        });
+        mViewModel.getRefreshTaskEvent().observe(this, new Observer<GankList>() {
+            @Override
+            public void onChanged(@Nullable GankList gankList) {
+                fetchGankListSuccess(gankList,true);
+            }
+        });
+        mBinding.setViewmodel(mViewModel);
         initViews();
         return mBinding.getRoot();
     }
 
     @Override
     public void onRefresh() {
-        mPresenter.fetchGankList(mDataType, AppUtil.getPageIndex(mAdapter.getItemCount(),
+        mViewModel.fetchGankList(mDataType, AppUtil.getPageIndex(mAdapter.getItemCount(),
                 Constants.PAGE_SIZE), Constants.PAGE_SIZE);
     }
 
     @Override
     public void onLoadMore() {
         if(!mSwipeRefreshLayout.isRefreshing()) {
-            mPresenter.fetchGankList(mDataType, AppUtil.getPageIndex(mAdapter.getItemCount(),
+            mViewModel.fetchGankList(mDataType, AppUtil.getPageIndex(mAdapter.getItemCount(),
                     Constants.PAGE_SIZE), Constants.PAGE_SIZE);
         }
     }
@@ -102,7 +113,6 @@ public class MainTabFragment extends BaseFragment implements MainTabContract.IMa
     }
 
     private void initViews() {
-        mPresenter.attachView(this);
         initSwipeView();
         intRecyclerView();
         initData();
@@ -148,23 +158,31 @@ public class MainTabFragment extends BaseFragment implements MainTabContract.IMa
         });
     }
 
+    private GankListViewModel obtainViewModel(){
+        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        GankListViewModel viewModel =  factory.create(GankListViewModel.class);
+        viewModel.setRepository(((MainActivity)getActivity()).getRepository());
+        return viewModel;
+    }
 
-    @Override
-    public void fetchGankListSuccess(GankList gankList, boolean hasMoreData) {
-        mAdapter.setData(gankList);
+    private void fetchGankListSuccess(GankList gankList, boolean refresh) {
+        if(gankList == null){
+            fetchGankListComplete();
+            return;
+        }
+        mAdapter.setData(gankList,refresh);
+        fetchGankListComplete();
+    }
+
+
+    private void fetchGankListComplete() {
         mSwipeRefreshLayout.setRefreshing(false);
         mRecyclerView.setLoadMoreComplete();
     }
 
     @Override
-    public void fetchGankListFail(String reason) {
-        mSwipeRefreshLayout.setRefreshing(false);
-        mRecyclerView.setLoadMoreComplete();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mPresenter.detachView();
+    public void onDestroy() {
+        super.onDestroy();
+        mViewModel.onDestroy();
     }
 }
