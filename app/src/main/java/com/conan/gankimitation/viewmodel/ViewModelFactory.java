@@ -47,6 +47,10 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory{
             //noinspection unchecked
             return (T) new WelfareViewModel(mApplication);
         }
+        if (modelClass.isAssignableFrom(GankListViewModel.class)) {
+            //noinspection unchecked
+            return (T) new GankListViewModel(mApplication);
+        }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }
 }
