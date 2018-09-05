@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <meta-data android:name="com.conan.gankimitation.imageloader.CustomGlideModule" android:value="GlideModule"/>
+        <meta-data android:name="com.conan.gankimitation.utils.CustomGlideModule" android:value="GlideModule"/>
 
         <activity android:name=".view.activities.MainActivity">
             <intent-filter>

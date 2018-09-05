@@ -2,6 +2,7 @@ package com.conan.gankimitation.view.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ public class WelfareAdapter extends RecyclerView.Adapter<WelfareAdapter.BindingH
     }
 
     public void setData(GankList data, boolean refresh) {
+        Log.i("zpy","setData:"+refresh);
         int position = 0;
         if(mWelfareData == null) {
             this.mWelfareData = data;
