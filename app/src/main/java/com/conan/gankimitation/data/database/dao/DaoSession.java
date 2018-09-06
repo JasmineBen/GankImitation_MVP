@@ -8,7 +8,7 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
-import com.conan.gankimitation.bean.GankEntity;
+import com.conan.gankimitation.model.GankEntity;
 
 import com.conan.gankimitation.data.database.dao.GankEntityDao;
 

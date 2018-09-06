@@ -4,11 +4,14 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
-import com.conan.gankimitation.bean.GankList;
+import com.conan.gankimitation.GankApplication;
+import com.conan.gankimitation.model.GankList;
 import com.conan.gankimitation.data.network.GankApi;
 import com.conan.gankimitation.data.repository.IRepository;
 import com.conan.gankimitation.utils.AppUtil;
 import com.conan.gankimitation.utils.LogUtil;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.CompositeDisposable;
@@ -18,8 +21,8 @@ public class GankListViewModel extends AndroidViewModel {
 
     private static final String TAG = "GankListViewModel";
 
-
-    private IRepository mRepository;
+    @Inject
+    IRepository mRepository;
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
@@ -28,10 +31,8 @@ public class GankListViewModel extends AndroidViewModel {
 
     public GankListViewModel(@NonNull Application application) {
         super(application);
-    }
-
-    public void setRepository(IRepository repository){
-        mRepository = repository;
+        GankApplication app = (GankApplication)application;
+        app.getAppComponent().inject(this);
     }
 
     public SingleLiveEvent<GankList> getLoadMoreTaskEvent() {
@@ -68,9 +69,9 @@ public class GankListViewModel extends AndroidViewModel {
             @Override
             public void onError(@io.reactivex.annotations.NonNull Throwable throwable) {
                 LogUtil.i(TAG, "fetchGankList onError");
-                if(pageIndex == 1){
-                    mRefreshTaskEvent.setValue(null);
-                }else {
+                if (pageIndex == 1) {
+                    fetchCacheList(type, pageIndex, pageSize);
+                } else {
                     mLoadMoreTaskEvent.setValue(null);
                 }
             }
@@ -81,6 +82,42 @@ public class GankListViewModel extends AndroidViewModel {
             }
         };
         mRepository.getRemoteGankList(observer, type.getDataType(), pageIndex, pageSize);
+    }
+
+    private void fetchCacheList(final GankApi.GankDataType type, final int pageIndex, final int pageSize){
+        Observer<GankList> observer = new Observer<GankList>() {
+            @Override
+            public void onSubscribe(@io.reactivex.annotations.NonNull Disposable disposable) {
+                mCompositeDisposable.add(disposable);
+            }
+
+            @Override
+            public void onNext(@io.reactivex.annotations.NonNull GankList gankList) {
+                if (gankList != null) {
+                    gankList.setType(type.getDataType());
+                }
+                cacheGankList(gankList);
+                if(pageIndex == 1){
+                    mRefreshTaskEvent.setValue(gankList);
+                }else {
+                    mLoadMoreTaskEvent.setValue(gankList);
+                }
+            }
+
+            @Override
+            public void onError(@io.reactivex.annotations.NonNull Throwable throwable) {
+                if(pageIndex == 1){
+                    mRefreshTaskEvent.setValue(null);
+                }else {
+                    mLoadMoreTaskEvent.setValue(null);
+                }
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        };
+        mRepository.getLocalGankList(observer,type.getDataType(), pageIndex, pageSize);
     }
 
     private void cacheGankList(GankList gankList) {

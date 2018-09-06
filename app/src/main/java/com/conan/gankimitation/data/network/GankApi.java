@@ -1,6 +1,6 @@
 package com.conan.gankimitation.data.network;
 
-import com.conan.gankimitation.bean.GankList;
+import com.conan.gankimitation.model.GankList;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;

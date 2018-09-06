@@ -1,6 +1,6 @@
 package com.conan.gankimitation.data.repository;
 
-import com.conan.gankimitation.bean.GankList;
+import com.conan.gankimitation.model.GankList;
 import com.conan.gankimitation.data.LocalDataSource;
 import com.conan.gankimitation.data.RemoteDataSource;
 
@@ -11,7 +11,6 @@ import javax.inject.Singleton;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**

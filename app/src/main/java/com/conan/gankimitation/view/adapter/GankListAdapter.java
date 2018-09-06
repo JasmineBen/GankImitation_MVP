@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.conan.gankimitation.R;
-import com.conan.gankimitation.bean.GankList;
+import com.conan.gankimitation.model.GankList;
 import com.conan.gankimitation.databinding.GankItemLayoutBinding;
 import com.conan.gankimitation.view.activities.BaseActivity;
 import com.conan.gankimitation.view.listener.OnItemClickListener;

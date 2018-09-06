@@ -2,7 +2,6 @@ package com.conan.gankimitation.view.activities;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -16,21 +15,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.conan.gankimitation.R;
-import com.conan.gankimitation.bean.MainTab;
-import com.conan.gankimitation.data.repository.IRepository;
+import com.conan.gankimitation.model.MainTab;
 import com.conan.gankimitation.databinding.ActivityMainBinding;
 import com.conan.gankimitation.utils.AppUtil;
+import com.conan.gankimitation.utils.GlideApp;
 import com.conan.gankimitation.utils.LogUtil;
 import com.conan.gankimitation.view.adapter.MainTabPagerAdapter;
-import com.conan.gankimitation.widget.CircleDrawable;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * Description：主Activity
@@ -45,9 +40,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     ViewPager mViewPager;
     TabLayout mTabLayout;
     ActivityMainBinding mBinding;
-
-    @Inject
-    IRepository mRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,14 +97,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mNavigationView = mBinding.navigationView;
         mNavigationView.setNavigationItemSelectedListener(this);
         View headView = mNavigationView.getHeaderView(0);
-        ImageView headImage = (ImageView) headView.findViewById(R.id.header);
-        Glide.with(this).load(R.mipmap.navigation_header).asBitmap().into(new BitmapImageViewTarget(headImage) {
-            @Override
-            protected void setResource(Bitmap resource) {
-                    getView().setImageDrawable(new CircleDrawable(resource));
-
-            }
-        });
+        ImageView headImage = headView.findViewById(R.id.header);
+        GlideApp.with(this).load(R.mipmap.navigation_header).transform(new CircleCrop()).into(headImage);
     }
 
     @Override
@@ -129,7 +115,4 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return true;
     }
 
-    public IRepository getRepository() {
-        return mRepository;
-    }
 }

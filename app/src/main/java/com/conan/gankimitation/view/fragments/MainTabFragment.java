@@ -14,14 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.conan.gankimitation.R;
-import com.conan.gankimitation.bean.GankEntity;
-import com.conan.gankimitation.bean.GankList;
+import com.conan.gankimitation.model.GankEntity;
+import com.conan.gankimitation.model.GankList;
 import com.conan.gankimitation.data.network.GankApi;
 import com.conan.gankimitation.databinding.GankListLayoutBinding;
 import com.conan.gankimitation.utils.AppUtil;
 import com.conan.gankimitation.utils.Constants;
 import com.conan.gankimitation.utils.LogUtil;
-import com.conan.gankimitation.view.activities.MainActivity;
 import com.conan.gankimitation.view.adapter.GankListAdapter;
 import com.conan.gankimitation.view.listener.OnItemClickListener;
 import com.conan.gankimitation.viewmodel.GankListViewModel;
@@ -161,7 +160,6 @@ public class MainTabFragment extends BaseFragment implements SwipeRefreshLayout.
     private GankListViewModel obtainViewModel(){
         ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
         GankListViewModel viewModel =  factory.create(GankListViewModel.class);
-        viewModel.setRepository(((MainActivity)getActivity()).getRepository());
         return viewModel;
     }
 

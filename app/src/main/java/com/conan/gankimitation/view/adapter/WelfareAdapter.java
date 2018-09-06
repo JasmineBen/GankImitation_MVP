@@ -4,14 +4,12 @@ import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.conan.gankimitation.R;
-import com.conan.gankimitation.bean.GankList;
+import com.conan.gankimitation.model.GankList;
 import com.conan.gankimitation.databinding.ItemWelfareBinding;
 import com.conan.gankimitation.view.activities.BaseActivity;
-import com.conan.gankimitation.view.listener.OnItemClickListener;
 import com.conan.gankimitation.viewmodel.ViewModelFactory;
 import com.conan.gankimitation.viewmodel.WelfareViewModel;
 

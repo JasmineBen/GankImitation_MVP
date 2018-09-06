@@ -5,7 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 
-import com.conan.gankimitation.bean.GankEntity;
+import com.conan.gankimitation.model.GankEntity;
 import com.conan.gankimitation.utils.AppUtil;
 
 public class GankItemViewModel extends AndroidViewModel{

@@ -1,7 +1,7 @@
 package com.conan.gankimitation.data;
 
-import com.conan.gankimitation.bean.GankEntity;
-import com.conan.gankimitation.bean.GankList;
+import com.conan.gankimitation.model.GankEntity;
+import com.conan.gankimitation.model.GankList;
 import com.conan.gankimitation.data.database.dao.DaoMaster;
 import com.conan.gankimitation.data.database.dao.DaoSession;
 import com.conan.gankimitation.data.database.dao.GankEntityDao;

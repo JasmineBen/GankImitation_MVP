@@ -1,6 +1,7 @@
 package com.conan.gankimitation.view.activities;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -8,15 +9,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
 import com.conan.gankimitation.R;
-import com.conan.gankimitation.bean.GankList;
+import com.conan.gankimitation.model.GankList;
 import com.conan.gankimitation.data.network.GankApi;
-import com.conan.gankimitation.data.repository.IRepository;
 import com.conan.gankimitation.databinding.WelfareLayoutBinding;
 import com.conan.gankimitation.utils.AppUtil;
 import com.conan.gankimitation.utils.Constants;
@@ -41,8 +40,6 @@ public class WelfareActivity extends BaseActivity implements SwipeRefreshLayout.
 
     @Inject
     WelfareAdapter mAdapter;
-    @Inject
-    IRepository mRepository;
     SwipeRefreshLayout mSwipeRefreshLayout;
     GankRecyclerView mRecyclerView;
     WelfareLayoutBinding mBinding;
@@ -163,7 +160,6 @@ public class WelfareActivity extends BaseActivity implements SwipeRefreshLayout.
     private GankListViewModel obtainViewModel(){
         ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
         GankListViewModel viewModel =  factory.create(GankListViewModel.class);
-        viewModel.setRepository(mRepository);
         return viewModel;
     }
 }

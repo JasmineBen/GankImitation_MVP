@@ -1,4 +1,4 @@
-package com.conan.gankimitation.bean;
+package com.conan.gankimitation.model;
 
 
 /**

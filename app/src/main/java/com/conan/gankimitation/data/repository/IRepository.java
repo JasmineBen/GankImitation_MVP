@@ -1,9 +1,8 @@
 package com.conan.gankimitation.data.repository;
 
-import com.conan.gankimitation.bean.GankList;
+import com.conan.gankimitation.model.GankList;
 
 import io.reactivex.Observer;
-import io.reactivex.functions.Consumer;
 
 /**
  * Description：资源层接口

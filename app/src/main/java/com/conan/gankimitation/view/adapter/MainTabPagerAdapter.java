@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.conan.gankimitation.view.activities.BaseActivity;
-import com.conan.gankimitation.bean.MainTab;
+import com.conan.gankimitation.model.MainTab;
 import com.conan.gankimitation.view.fragments.MainTabFragment;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.conan.gankimitation.data;
 
-import com.conan.gankimitation.bean.GankList;
+import com.conan.gankimitation.model.GankList;
 import com.conan.gankimitation.data.network.RequestManager;
 
 import javax.inject.Inject;
